@@ -1,0 +1,298 @@
+/* ============================================================
+   AskAI — FAQ Chatbot — scoped styles
+   All selectors start with .nfc- to avoid theme conflicts
+   ============================================================ */
+
+[data-nfc-chatbot] {
+  --nfc-primary: #667eea;
+  --nfc-primary-dark: #5568d3;
+  --nfc-gradient: linear-gradient(135deg, #667eea, #764ba2);
+  --nfc-bg: #f8f9fb;
+  --nfc-border: #e5e7eb;
+  --nfc-text: #333;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ===== Floating bubble button (position-aware) ===== */
+.nfc-chatbot-floating .nfc-bubble {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--nfc-gradient);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999998;
+  transition: transform 0.2s;
+}
+
+.nfc-chatbot-floating .nfc-bubble:hover { transform: scale(1.08); }
+
+.nfc-chatbot-floating.nfc-pos-bottom-right .nfc-bubble { bottom: 24px; right: 24px; }
+.nfc-chatbot-floating.nfc-pos-bottom-left  .nfc-bubble { bottom: 24px; left:  24px; }
+.nfc-chatbot-floating.nfc-pos-top-right    .nfc-bubble { top:    24px; right: 24px; }
+.nfc-chatbot-floating.nfc-pos-top-left     .nfc-bubble { top:    24px; left:  24px; }
+
+/* ===== Chat window (position-aware) ===== */
+.nfc-window-floating {
+  position: fixed;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  height: 560px;
+  max-height: calc(100vh - 140px);
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 999999;
+}
+
+.nfc-chatbot-floating.nfc-pos-bottom-right .nfc-window-floating { bottom: 100px; right: 24px; }
+.nfc-chatbot-floating.nfc-pos-bottom-left  .nfc-window-floating { bottom: 100px; left:  24px; }
+.nfc-chatbot-floating.nfc-pos-top-right    .nfc-window-floating { top:    100px; right: 24px; }
+.nfc-chatbot-floating.nfc-pos-top-left     .nfc-window-floating { top:    100px; left:  24px; }
+
+.nfc-window-floating.nfc-open {
+  display: flex;
+  animation: nfc-slide-up 0.25s ease-out;
+}
+
+@keyframes nfc-slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.nfc-window-inline {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  height: 600px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 16px auto;
+  border: 1px solid var(--nfc-border);
+}
+
+/* ===== Header ===== */
+.nfc-header {
+  background: var(--nfc-gradient);
+  color: #fff;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nfc-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.nfc-header-text { flex: 1; }
+.nfc-title { font-size: 16px; font-weight: 600; line-height: 1.2; }
+.nfc-status { font-size: 11px; opacity: 0.9; }
+.nfc-status::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #4ade80;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.nfc-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.85;
+}
+.nfc-close:hover { opacity: 1; }
+
+/* ===== Messages ===== */
+.nfc-messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  background: var(--nfc-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nfc-message { display: flex; max-width: 85%; }
+.nfc-message.nfc-user { align-self: flex-end; justify-content: flex-end; }
+.nfc-message.nfc-bot  { align-self: flex-start; }
+
+.nfc-bubble-msg {
+  padding: 9px 13px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  color: var(--nfc-text);
+}
+
+.nfc-message.nfc-user .nfc-bubble-msg {
+  background: var(--nfc-primary);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+  white-space: pre-wrap;
+}
+
+.nfc-message.nfc-bot .nfc-bubble-msg {
+  background: #fff;
+  border: 1px solid var(--nfc-border);
+  border-bottom-left-radius: 4px;
+}
+
+/* ===== Markdown inside bot bubbles ===== */
+.nfc-message.nfc-bot .nfc-bubble-msg p { margin: 0 0 6px 0; }
+.nfc-message.nfc-bot .nfc-bubble-msg p:last-child { margin-bottom: 0; }
+.nfc-message.nfc-bot .nfc-bubble-msg ul,
+.nfc-message.nfc-bot .nfc-bubble-msg ol { margin: 4px 0 6px 0; padding-left: 22px; }
+.nfc-message.nfc-bot .nfc-bubble-msg li { margin: 2px 0; }
+.nfc-message.nfc-bot .nfc-bubble-msg a { color: var(--nfc-primary); text-decoration: underline; }
+.nfc-message.nfc-bot .nfc-bubble-msg code {
+  background: #f1f3f5;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12.5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.nfc-message.nfc-bot .nfc-bubble-msg pre {
+  background: #f1f3f5;
+  padding: 8px 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 6px 0;
+}
+.nfc-message.nfc-bot .nfc-bubble-msg pre code { background: transparent; padding: 0; }
+
+/* ===== Typing indicator (animated dots) ===== */
+.nfc-message.nfc-typing .nfc-bubble-msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 14px;
+}
+.nfc-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9ca3af;
+  display: inline-block;
+  animation: nfc-bounce 1.2s infinite ease-in-out both;
+}
+.nfc-dot:nth-child(1) { animation-delay: -0.32s; }
+.nfc-dot:nth-child(2) { animation-delay: -0.16s; }
+@keyframes nfc-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40%           { transform: scale(1);   opacity: 1;   }
+}
+
+/* ===== Quick reply chips ===== */
+.nfc-quick-replies {
+  padding: 0 12px 8px;
+  background: var(--nfc-bg);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.nfc-quick-reply {
+  background: #fff;
+  border: 1px solid var(--nfc-primary);
+  color: var(--nfc-primary);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.nfc-quick-reply:hover {
+  background: var(--nfc-primary);
+  color: #fff;
+}
+
+/* ===== Input ===== */
+.nfc-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: #fff;
+  border-top: 1px solid var(--nfc-border);
+}
+
+.nfc-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--nfc-border);
+  border-radius: 22px;
+  font-size: 14px;
+  outline: none;
+  color: var(--nfc-text);
+  background: #fff;
+}
+
+.nfc-input:focus { border-color: var(--nfc-primary); }
+
+.nfc-send {
+  padding: 10px 18px;
+  background: var(--nfc-primary);
+  color: #fff;
+  border: none;
+  border-radius: 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.nfc-send:hover:not(:disabled) { background: var(--nfc-primary-dark); }
+.nfc-send:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+/* ===== Scrollbar ===== */
+.nfc-messages::-webkit-scrollbar { width: 6px; }
+.nfc-messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+/* ===== Mobile ===== */
+@media (max-width: 480px) {
+  .nfc-window-floating {
+    width: 100vw;
+    max-width: 100vw;
+    height: calc(100vh - 70px);
+    max-height: calc(100vh - 70px);
+    border-radius: 16px 16px 0 0;
+  }
+  .nfc-chatbot-floating.nfc-pos-bottom-right .nfc-window-floating,
+  .nfc-chatbot-floating.nfc-pos-bottom-left  .nfc-window-floating { bottom: 0; left: 0; right: 0; }
+  .nfc-chatbot-floating.nfc-pos-top-right    .nfc-window-floating,
+  .nfc-chatbot-floating.nfc-pos-top-left     .nfc-window-floating { top:    0; left: 0; right: 0; }
+
+  .nfc-chatbot-floating.nfc-pos-bottom-right .nfc-bubble { bottom: 16px; right: 16px; }
+  .nfc-chatbot-floating.nfc-pos-bottom-left  .nfc-bubble { bottom: 16px; left:  16px; }
+  .nfc-chatbot-floating.nfc-pos-top-right    .nfc-bubble { top:    16px; right: 16px; }
+  .nfc-chatbot-floating.nfc-pos-top-left     .nfc-bubble { top:    16px; left:  16px; }
+}
